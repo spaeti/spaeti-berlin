@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Späti Berlin</string>
+    <string name="action_add">Hinzufügen</string>
+    <string name="action_map">Karte</string>
+    <string name="action_favorites">Favoriten</string>
+
+</resources>
