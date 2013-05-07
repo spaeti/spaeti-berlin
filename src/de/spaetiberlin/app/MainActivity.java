@@ -5,13 +5,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentManager;
+import android.view.Display;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -30,22 +31,33 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// gets the width of the screen
+		int width;
+		Display display = getWindowManager().getDefaultDisplay();
+		// if android version is >=13, we can use display.getSize, otherwise, deprecated fallback
+		if (android.os.Build.VERSION.SDK_INT >= 13) {
+			Point size = new Point();
+			display.getSize(size);
+			width = size.x;
+		} else {
+			width = display.getWidth();
+		}
+
 		SlidingMenu menu = new SlidingMenu(this);
 		menu.setMode(SlidingMenu.LEFT);
 		menu.setFadeDegree(0.35f);
-		menu.setBehindWidth(500);
+		menu.setBehindWidth(width / 2);
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.sidemenu);
 
 		// Get the location manager
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Define the criteria how to select the location provider -> use
-		// default
+		// Define the criteria how to select the location provider -> use default
 		String provider = locationManager.getBestProvider(new Criteria(), false);
 		Location location = locationManager.getLastKnownLocation(provider);
 
-		FragmentManager myFragmentManager = getSupportFragmentManager();
-		SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager
+		SupportMapFragment mySupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map);
 		final GoogleMap mMap = mySupportMapFragment.getMap();
 
@@ -63,13 +75,11 @@ public class MainActivity extends SherlockFragmentActivity {
 					for (int i = 0; i < jsonArray.length(); i++) {
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
 						JSONObject spaetiLocation = jsonObject.getJSONObject("location");
-						double lat = spaetiLocation.getDouble("lat");
-						double lng = spaetiLocation.getDouble("lng");
-						mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(
-								jsonObject.getString("name")));
+						mMap.addMarker(new MarkerOptions().position(
+								new LatLng(spaetiLocation.getDouble("lat"), spaetiLocation
+										.getDouble("lng"))).title(jsonObject.getString("name")));
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -81,7 +91,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			@Override
 			public void run() {
-
 				String data = JsonUtil.getJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/");
 				Message m = new Message();
 				Bundle b = new Bundle();
