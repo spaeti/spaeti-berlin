@@ -1,7 +1,7 @@
 *.class
 
 bin/
-libs/
+gen/
 
 # Package Files #
 *.jar
