@@ -9,13 +9,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -41,10 +44,22 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// gets the width of the screen
+		int width;
+		Display display = getWindowManager().getDefaultDisplay();
+		// if android version is >=13, we can use display.getSize, otherwise, deprecated fallback
+		if (android.os.Build.VERSION.SDK_INT >= 13) {
+			Point size = new Point();
+			display.getSize(size);
+			width = size.x;
+		} else {
+			width = display.getWidth();
+		}
+
 		final SlidingMenu sidemenu = new SlidingMenu(this);
 		sidemenu.setMode(SlidingMenu.LEFT);
 		sidemenu.setFadeDegree(0.35f);
-		sidemenu.setBehindWidth(500);
+		sidemenu.setBehindWidth(width / 2);
 		sidemenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
 		sidemenu.setMenu(R.layout.sidemenu);
 
@@ -52,7 +67,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		shopInfo.setMode(SlidingMenu.RIGHT);
 		shopInfo.setSlidingEnabled(false);
 		shopInfo.setFadeEnabled(false);
-		shopInfo.setBehindWidth(500);
+		shopInfo.setBehindWidth((int) (width / 1.3));
 		shopInfo.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		shopInfo.setMenu(R.layout.shop_detail_side);
 		shopInfo.setOnClosedListener(new OnClosedListener() {
@@ -66,13 +81,6 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		final Map<String, String> markersAndStores = new HashMap<String, String>();
 
-		// Get the location manager
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Define the criteria how to select the location provider -> use
-		// default
-		String provider = locationManager.getBestProvider(new Criteria(), false);
-		Location location = locationManager.getLastKnownLocation(provider);
-
 		FragmentManager myFragmentManager = getSupportFragmentManager();
 		SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager
 				.findFragmentById(R.id.map);
@@ -80,8 +88,38 @@ public class MainActivity extends SherlockFragmentActivity {
 
 		mMap.getUiSettings().setMyLocationButtonEnabled(true);
 		mMap.setMyLocationEnabled(true);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
-				location.getLongitude()), 14));
+
+		// Get the location manager
+		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		// Define the criteria how to select the location provider -> use
+		// default
+		String provider = locationManager.getBestProvider(new Criteria(), false);
+
+		locationManager.requestLocationUpdates(provider, 100, 1, new LocationListener() {
+
+			public void onLocationChanged(Location location) {
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+						location.getLatitude(), location.getLongitude()), 14));
+			}
+
+			@Override
+			public void onProviderDisabled(String arg0) {}
+
+			@Override
+			public void onProviderEnabled(String provider) {}
+
+			@Override
+			public void onStatusChanged(String provider, int status, Bundle extras) {}
+		});
+
+		try {
+			Location location = locationManager.getLastKnownLocation(provider);
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
+					location.getLongitude()), 14));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
 			@Override
@@ -175,7 +213,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private String convertToTime(int value) {
-		return String.format(Locale.getDefault(), "%02d:%02d", value / 100, (value - value / 100 * 100));
+		return String.format(Locale.getDefault(), "%02d:%02d", value / 100,
+				(value - value / 100 * 100));
 	}
 
 	public void onStarClick(View view) {
