@@ -8,10 +8,12 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.view.Display;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -51,20 +53,52 @@ public class MainActivity extends SherlockFragmentActivity {
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.sidemenu);
 
-		// Get the location manager
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Define the criteria how to select the location provider -> use default
-		String provider = locationManager.getBestProvider(new Criteria(), false);
-		Location location = locationManager.getLastKnownLocation(provider);
-
-		SupportMapFragment mySupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
+		FragmentManager myFragmentManager = getSupportFragmentManager();
+		SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager
 				.findFragmentById(R.id.map);
 		final GoogleMap mMap = mySupportMapFragment.getMap();
 
 		mMap.getUiSettings().setMyLocationButtonEnabled(true);
 		mMap.setMyLocationEnabled(true);
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
-				location.getLongitude()), 14));
+		// Get the location manager
+		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		// Define the criteria how to select the location provider -> use
+		// default
+		String provider = locationManager.getBestProvider(new Criteria(), false);
+
+		locationManager.requestLocationUpdates(provider, 100, 1, new LocationListener() {
+
+			public void onLocationChanged(Location location) {
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+						location.getLatitude(), location.getLongitude()), 14));
+			}
+
+			@Override
+			public void onProviderDisabled(String arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onStatusChanged(String provider, int status, Bundle extras) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		try {
+			Location location = locationManager.getLastKnownLocation(provider);
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
+					location.getLongitude()), 14));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		final Handler handler = new Handler(new Handler.Callback() {
 

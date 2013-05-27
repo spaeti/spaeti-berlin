@@ -1,6 +1,6 @@
-*.class
-
 bin/
+gen/
+
 libs/
 
 # Package Files #
