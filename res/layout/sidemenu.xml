@@ -13,7 +13,8 @@
         android:text="@string/action_add"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:textSize="24sp" 
+        android:onClick="addStore" />
 
     <TextView
         android:layout_width="fill_parent"
