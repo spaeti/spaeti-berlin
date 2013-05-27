@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
+import android.view.Display;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -31,10 +33,23 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// gets the width of the screen
+		int width;
+		Display display = getWindowManager().getDefaultDisplay();
+		// if android version is >=13, we can use display.getSize, otherwise, deprecated fallback
+		if (android.os.Build.VERSION.SDK_INT >= 13) {
+			Point size = new Point();
+			display.getSize(size);
+			width = size.x;
+		} else {
+			width = display.getWidth();
+		}
+
 		SlidingMenu menu = new SlidingMenu(this);
 		menu.setMode(SlidingMenu.LEFT);
 		menu.setFadeDegree(0.35f);
-		menu.setBehindWidth(500);
+		menu.setBehindWidth(width / 2);
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.sidemenu);
 
@@ -49,41 +64,38 @@ public class MainActivity extends SherlockFragmentActivity {
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Define the criteria how to select the location provider -> use
 		// default
-		String provider = locationManager
-				.getBestProvider(new Criteria(), false);
+		String provider = locationManager.getBestProvider(new Criteria(), false);
 
-		locationManager.requestLocationUpdates(provider, 100, 1,
-				new LocationListener() {
-					public void onLocationChanged(Location location) {
-						mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-								new LatLng(location.getLatitude(), location
-										.getLongitude()), 14));
-					}
+		locationManager.requestLocationUpdates(provider, 100, 1, new LocationListener() {
 
-					@Override
-					public void onProviderDisabled(String arg0) {
-						// TODO Auto-generated method stub
+			public void onLocationChanged(Location location) {
+				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+						location.getLatitude(), location.getLongitude()), 14));
+			}
 
-					}
+			@Override
+			public void onProviderDisabled(String arg0) {
+				// TODO Auto-generated method stub
 
-					@Override
-					public void onProviderEnabled(String provider) {
-						// TODO Auto-generated method stub
+			}
 
-					}
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
 
-					@Override
-					public void onStatusChanged(String provider, int status,
-							Bundle extras) {
-						// TODO Auto-generated method stub
+			}
 
-					}
-				});
+			@Override
+			public void onStatusChanged(String provider, int status, Bundle extras) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 		try {
 			Location location = locationManager.getLastKnownLocation(provider);
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-					location.getLatitude(), location.getLongitude()), 14));
+			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
+					location.getLongitude()), 14));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,17 +105,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			@Override
 			public boolean handleMessage(Message msg) {
 				try {
-					JSONArray jsonArray = new JSONArray(msg.getData()
-							.getString("spaetis"));
+					JSONArray jsonArray = new JSONArray(msg.getData().getString("spaetis"));
 					for (int i = 0; i < jsonArray.length(); i++) {
 						JSONObject jsonObject = jsonArray.getJSONObject(i);
-						JSONObject spaetiLocation = jsonObject
-								.getJSONObject("location");
-						double lat = spaetiLocation.getDouble("lat");
-						double lng = spaetiLocation.getDouble("lng");
+						JSONObject spaetiLocation = jsonObject.getJSONObject("location");
 						mMap.addMarker(new MarkerOptions().position(
-								new LatLng(lat, lng)).title(
-								jsonObject.getString("name")));
+								new LatLng(spaetiLocation.getDouble("lat"), spaetiLocation
+										.getDouble("lng"))).title(jsonObject.getString("name")));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -117,9 +125,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 			@Override
 			public void run() {
-
-				String data = JsonUtil
-						.getJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/");
+				String data = JsonUtil.getJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/");
 				Message m = new Message();
 				Bundle b = new Bundle();
 				b.putString("spaetis", data);
