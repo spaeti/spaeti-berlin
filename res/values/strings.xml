@@ -5,5 +5,15 @@
     <string name="action_add">Hinzufügen</string>
     <string name="action_map">Karte</string>
     <string name="action_favorites">Favoriten</string>
+    <string name="store_image">Bild des Späti</string>
+    <string name="favorite">Favorit</string>
+    <string name="openings">Öffnungszeiten</string>
+    <string name="monday">Montag</string>
+    <string name="tuesday">Dienstag</string>
+    <string name="wednesday">Mittwoch</string>
+    <string name="thursday">Donnerstag</string>
+    <string name="friday">Freitag</string>
+    <string name="saturday">Samstag</string>
+    <string name="sunday">Sonntag</string>
 
 </resources>
