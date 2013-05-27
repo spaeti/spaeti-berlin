@@ -1,6 +1,8 @@
 bin/
 gen/
 
+libs/
+
 # Package Files #
 *.jar
 *.war
