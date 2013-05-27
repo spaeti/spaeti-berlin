@@ -175,7 +175,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private String convertToTime(int value) {
-		return String.format(Locale.GERMANY, "%02d:%02d", value / 100, (value - value / 100 * 100));
+		return String.format(Locale.getDefault(), "%02d:%02d", value / 100, (value - value / 100 * 100));
 	}
 
 	public void onStarClick(View view) {

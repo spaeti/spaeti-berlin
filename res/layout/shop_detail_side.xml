@@ -22,6 +22,7 @@
                 <ImageView
                     android:layout_width="300dp"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/store_image"
                     android:src="@drawable/keinebilder" />
             </LinearLayout>
         </HorizontalScrollView>
@@ -42,14 +43,12 @@
                     android:id="@+id/shopNameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Johanns Späti"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/shopAdressText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Prinzenallee 33"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
@@ -64,6 +63,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:contentDescription="@string/favorite"
                     android:onClick="onStarClick"
                     android:src="@drawable/rating_not_important_dark" />
             </LinearLayout>
@@ -84,7 +84,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Öffnungszeiten"
+                android:text="@string/openings"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <LinearLayout
@@ -96,7 +96,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Montag"
+                    android:text="@string/monday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
@@ -115,7 +115,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Dienstag"
+                    android:text="@string/tuesday"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#55aa55" />
 
@@ -136,7 +136,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Mittwoch"
+                    android:text="@string/wednesday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
@@ -155,7 +155,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Donnerstag"
+                    android:text="@string/thursday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
@@ -174,7 +174,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Freitag"
+                    android:text="@string/friday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
@@ -193,7 +193,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Samstag"
+                    android:text="@string/saturday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
@@ -212,7 +212,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Sonntag"
+                    android:text="@string/sunday"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
