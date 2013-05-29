@@ -15,5 +15,6 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
+    <string name="action_search">Suchen</string>
 
 </resources>
