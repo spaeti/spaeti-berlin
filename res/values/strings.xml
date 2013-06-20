@@ -15,5 +15,8 @@
     <string name="friday">Freitag</string>
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_about">About</string>
+    <string name="spaeti_logo">Logo</string>
 
 </resources>
