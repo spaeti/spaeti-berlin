@@ -39,7 +39,7 @@ public class MainActivity extends SpaetiAbstractActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
 		final SlidingMenu shopInfo = new SlidingMenu(this);
 		shopInfo.setMode(SlidingMenu.RIGHT);
 		shopInfo.setSlidingEnabled(false);
