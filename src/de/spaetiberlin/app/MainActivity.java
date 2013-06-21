@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,13 +17,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
-import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -37,32 +33,13 @@ import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 
 import de.spaetiberlin.app.util.JsonUtil;
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SpaetiAbstractActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		// gets the width of the screen
-		int width;
-		Display display = getWindowManager().getDefaultDisplay();
-		// if android version is >=13, we can use display.getSize, otherwise, deprecated fallback
-		if (android.os.Build.VERSION.SDK_INT >= 13) {
-			Point size = new Point();
-			display.getSize(size);
-			width = size.x;
-		} else {
-			width = display.getWidth();
-		}
-
-		final SlidingMenu sidemenu = new SlidingMenu(this);
-		sidemenu.setMode(SlidingMenu.LEFT);
-		sidemenu.setFadeDegree(0.35f);
-		sidemenu.setBehindWidth(width / 2);
-		sidemenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		sidemenu.setMenu(R.layout.sidemenu);
-
+		
 		final SlidingMenu shopInfo = new SlidingMenu(this);
 		shopInfo.setMode(SlidingMenu.RIGHT);
 		shopInfo.setSlidingEnabled(false);
@@ -89,7 +66,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		mMap.getUiSettings().setMyLocationButtonEnabled(true);
 		mMap.setMyLocationEnabled(true);
 
-		// Get the location manager
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		// Define the criteria how to select the location provider -> use
 		// default
@@ -220,13 +196,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void onStarClick(View view) {
 		ImageButton button = ((ImageButton) view);
 		button.setImageResource(R.drawable.rating_important_dark);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 
 }
