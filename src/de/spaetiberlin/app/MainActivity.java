@@ -1,6 +1,8 @@
 package de.spaetiberlin.app;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -8,19 +10,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.widget.SearchView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
@@ -35,11 +43,13 @@ import de.spaetiberlin.app.util.JsonUtil;
 
 public class MainActivity extends SpaetiAbstractActivity {
 
+	protected GoogleMap mMap;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		final SlidingMenu shopInfo = new SlidingMenu(this);
 		shopInfo.setMode(SlidingMenu.RIGHT);
 		shopInfo.setSlidingEnabled(false);
@@ -61,37 +71,19 @@ public class MainActivity extends SpaetiAbstractActivity {
 		FragmentManager myFragmentManager = getSupportFragmentManager();
 		SupportMapFragment mySupportMapFragment = (SupportMapFragment) myFragmentManager
 				.findFragmentById(R.id.map);
-		final GoogleMap mMap = mySupportMapFragment.getMap();
+		mMap = mySupportMapFragment.getMap();
 
 		mMap.getUiSettings().setMyLocationButtonEnabled(true);
 		mMap.setMyLocationEnabled(true);
 
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		// Define the criteria how to select the location provider -> use
-		// default
-		String provider = locationManager.getBestProvider(new Criteria(), false);
-
-		locationManager.requestLocationUpdates(provider, 100, 1, new LocationListener() {
-
-			public void onLocationChanged(Location location) {
-				mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
-						location.getLatitude(), location.getLongitude()), 14));
-			}
-
-			@Override
-			public void onProviderDisabled(String arg0) {}
-
-			@Override
-			public void onProviderEnabled(String provider) {}
-
-			@Override
-			public void onStatusChanged(String provider, int status, Bundle extras) {}
-		});
-
 		try {
+			// Get the location manager
+			LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			// Define the criteria how to select the location provider -> use
+			// default
+			String provider = locationManager.getBestProvider(new Criteria(), false);
 			Location location = locationManager.getLastKnownLocation(provider);
-			mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),
-					location.getLongitude()), 14));
+			moveMap(location.getLatitude(), location.getLongitude());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -186,6 +178,12 @@ public class MainActivity extends SpaetiAbstractActivity {
 					}
 				}));
 
+		handleIntent(getIntent());
+
+	}
+
+	public void moveMap(double lat, double lng) {
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 14));
 	}
 
 	private String convertToTime(int value) {
@@ -196,6 +194,46 @@ public class MainActivity extends SpaetiAbstractActivity {
 	public void onStarClick(View view) {
 		ImageButton button = ((ImageButton) view);
 		button.setImageResource(R.drawable.rating_important_dark);
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		handleIntent(intent);
+	}
+
+	protected void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			Log.d("de.spaetiberlin.app", "received intent");
+			try {
+
+				Geocoder gc = new Geocoder(this, Locale.getDefault());
+
+				if (Geocoder.isPresent()) {
+					List<Address> list = gc.getFromLocationName(query + ",Berlin", 1);
+
+					if (list.size() > 0) {
+						Address address = list.get(0);
+						moveMap(address.getLatitude(), address.getLongitude());
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportMenuInflater().inflate(R.menu.main, menu);
+		SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		// Assumes current activity is the searchable activity
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		return true;
 	}
 
 }

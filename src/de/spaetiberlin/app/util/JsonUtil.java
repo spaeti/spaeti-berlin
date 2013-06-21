@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+
 public class JsonUtil {
 
 	public static void getJSON(final String url, final Handler handler) {
