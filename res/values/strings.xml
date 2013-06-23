@@ -20,5 +20,9 @@
     <string name="spaeti_logo">Logo</string>
     <string name="action_search">Suchen</string>
     <string name="search_hint">Strasse, U-Bahnhof, Späti usw.</string>
+    <string name="adress">Adresse</string>
+    <string name="name">Name</string>
+    <string name="submit_spaeti">Absenden</string>
+    <string name="move_marker_or_enter">Marker verschieben oder eintragen</string>
 
 </resources>
