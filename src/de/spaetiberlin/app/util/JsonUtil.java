@@ -18,50 +18,49 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
 public class JsonUtil {
 
-	public static void getJSON(final String url, final Handler handler) {
+  public static void getJSON(final String url, final Handler handler) {
 
-		Thread thread = new Thread() {
+    final Thread thread = new Thread() {
 
-			@Override
-			public void run() {
+      @Override
+      public void run() {
 
-				StringBuilder builder = new StringBuilder();
-				HttpClient client = new DefaultHttpClient();
-				HttpGet httpGet = new HttpGet(url);
-				try {
-					HttpResponse response = client.execute(httpGet);
-					StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					if (statusCode == 200) {
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-						String line;
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-						}
-					} else {
-						Log.e(JsonUtil.class.toString(), "Failed to download file");
-					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				Message m = new Message();
-				Bundle b = new Bundle();
-				b.putString("json", builder.toString());
-				m.setData(b);
-				handler.sendMessage(m);
+        final StringBuilder builder = new StringBuilder();
+        final HttpClient client = new DefaultHttpClient();
+        final HttpGet httpGet = new HttpGet(url);
+        try {
+          final HttpResponse response = client.execute(httpGet);
+          final StatusLine statusLine = response.getStatusLine();
+          final int statusCode = statusLine.getStatusCode();
+          if (statusCode == 200) {
+            final HttpEntity entity = response.getEntity();
+            final InputStream content = entity.getContent();
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+            String line;
+            while ((line = reader.readLine()) != null) {
+              builder.append(line);
+            }
+          } else {
+            Log.e(JsonUtil.class.toString(), "Failed to download file");
+          }
+        } catch (final ClientProtocolException e) {
+          e.printStackTrace();
+        } catch (final IOException e) {
+          e.printStackTrace();
+        }
+        final Message m = new Message();
+        final Bundle b = new Bundle();
+        b.putString("json", builder.toString());
+        m.setData(b);
+        handler.sendMessage(m);
 
-			}
-		};
+      }
+    };
 
-		thread.start();
+    thread.start();
 
-	}
+  }
 
 }
