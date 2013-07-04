@@ -54,19 +54,22 @@
                     android:id="@+id/addressInput"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="3"
                     android:ems="15"
                     android:inputType="textPostalAddress" >
 
                     <requestFocus />
                 </EditText>
 
-                <Button
+                <ImageButton
                     android:id="@+id/searchGeoButton"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:text="@string/search_adress" />
+                    android:src="@drawable/location_place" />
             </LinearLayout>
 
             <LinearLayout
@@ -90,6 +93,9 @@
                 android:id="@+id/nameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:ems="10"
                 android:hint="@string/name" />
 
@@ -108,26 +114,56 @@
                     android:text="@string/openings"
                     android:textAlignment="center"
                     android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/newOpeningButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/plus_button" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:padding="10dp" >
 
-                <de.spaetiberlin.app.widgets.RangeBox 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/minus_button" />
+
+                    <de.spaetiberlin.app.widgets.RangeBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="09:00" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="bis" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24:00" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:padding="10dp" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,10 +180,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" >
+                android:padding="10dp" >
 
                 <ImageButton
+                    android:id="@+id/pizza_button"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:contentDescription="@string/pizza"
@@ -155,6 +191,7 @@
                     android:src="@drawable/pizza" />
 
                 <ImageButton
+                    android:id="@+id/condom_button"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:contentDescription="@string/condom"
@@ -162,6 +199,7 @@
                     android:src="@drawable/condom" />
 
                 <ImageButton
+                    android:id="@+id/newspaper_button"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:contentDescription="@string/newspaper"
@@ -169,6 +207,7 @@
                     android:src="@drawable/newspaper" />
 
                 <ImageButton
+                    android:id="@+id/chips_button"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:contentDescription="@string/chips"

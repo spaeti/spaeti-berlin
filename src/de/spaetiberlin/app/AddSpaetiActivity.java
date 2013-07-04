@@ -2,14 +2,17 @@ package de.spaetiberlin.app;
 
 import java.io.IOException;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -36,7 +39,55 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
     addressText = (EditText) findViewById(R.id.addressInput);
 
-    final Button searchGeoButton = (Button) findViewById(R.id.searchGeoButton);
+    final ImageButton pizzaButton = (ImageButton) findViewById(R.id.pizza_button);
+    final ImageButton condomButton = (ImageButton) findViewById(R.id.condom_button);
+    final ImageButton newspaperButton = (ImageButton) findViewById(R.id.newspaper_button);
+    final ImageButton chipsButton = (ImageButton) findViewById(R.id.chips_button);
+
+    if (android.os.Build.VERSION.SDK_INT >= 11) {
+      pizzaButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+          if (pizzaButton.getAlpha() > 0.3) {
+            pizzaButton.setAlpha((float) 0.2);
+          } else {
+            pizzaButton.setAlpha((float) 1);
+          }
+        }
+      });
+      condomButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+          if (condomButton.getAlpha() > 0.3) {
+            condomButton.setAlpha((float) 0.2);
+          } else {
+            condomButton.setAlpha((float) 1);
+          }
+        }
+      });
+      newspaperButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+          if (newspaperButton.getAlpha() > 0.3) {
+            newspaperButton.setAlpha((float) 0.2);
+          } else {
+            newspaperButton.setAlpha((float) 1);
+          }
+        }
+      });
+      chipsButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+          if (chipsButton.getAlpha() > 0.3) {
+            chipsButton.setAlpha((float) 0.2);
+          } else {
+            chipsButton.setAlpha((float) 1);
+          }
+        }
+      });
+    }
+
+    final ImageButton searchGeoButton = (ImageButton) findViewById(R.id.searchGeoButton);
 
     searchGeoButton.setOnClickListener(new OnClickListener() {
 
@@ -51,10 +102,35 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
             marker.setPosition(new LatLng(latitude, longitude));
             moveMap(latitude, longitude);
             setAddressText(new LatLng(latitude, longitude));
+            searchGeoButton.setBackgroundResource(R.drawable.green_button);
+            searchGeoButton.setImageResource(R.drawable.navigation_accept);
           }
         } catch (final IOException e) {
           e.printStackTrace();
         }
+      }
+    });
+
+    addressText.addTextChangedListener(new TextWatcher() {
+
+      @Override
+      public void onTextChanged(final CharSequence s, final int start, final int before,
+          final int count) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void beforeTextChanged(final CharSequence s, final int start, final int count,
+          final int after) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void afterTextChanged(final Editable s) {
+        searchGeoButton.setBackgroundResource(R.drawable.grey_button);
+        searchGeoButton.setImageResource(R.drawable.location_place);
       }
     });
 
@@ -80,14 +156,17 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
       @Override
       public void onMarkerDragStart(final Marker arg0) {
-        addressText.setTextColor(5000);
+        addressText.setTextColor(Color.GRAY);
         addressText.setText("Loslassen um Adresse festzulegen");
       }
 
       @Override
       public void onMarkerDragEnd(final Marker arg0) {
+        addressText.setTextColor(Color.BLACK);
         final LatLng position = arg0.getPosition();
         setAddressText(position);
+        searchGeoButton.setBackgroundResource(R.drawable.green_button);
+        searchGeoButton.setImageResource(R.drawable.navigation_accept);
       }
 
       @Override

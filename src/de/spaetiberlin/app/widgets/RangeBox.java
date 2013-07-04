@@ -20,7 +20,7 @@ public class RangeBox extends Button {
 
   private String[] abbr = new String[] { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
-  private String[] selected = new String[] { null, null, null, null, null, null, null };
+  private String[] selected = new String[] { "Mo", "Di", "Mi", "Do", "Fr", null, null };
 
   public RangeBox(final Context context) {
     super(context);
