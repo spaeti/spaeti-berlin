@@ -1,21 +1,35 @@
 package de.spaetiberlin.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
@@ -25,24 +39,40 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.spaetiberlin.app.util.GeoUtil;
+import de.spaetiberlin.app.util.JsonUtil;
+import de.spaetiberlin.app.widgets.RangeBox;
+import de.spaetiberlin.app.widgets.TimePickerButton;
 
 public class AddSpaetiActivity extends SherlockFragmentActivity {
 
   protected GoogleMap map;
   protected EditText addressText;
+  protected EditText nameText;
+  protected LinearLayout openingContainer;
   protected Marker marker;
+  protected Map<RangeBox, List<TimePickerButton>> openingMap;
+
+  protected ImageButton pizzaButton;
+  protected ImageButton condomButton;
+  protected ImageButton newspaperButton;
+  protected ImageButton chipsButton;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_add_spaeti);
 
-    addressText = (EditText) findViewById(R.id.addressInput);
+    openingContainer = (LinearLayout) findViewById(R.id.openingContainer);
 
-    final ImageButton pizzaButton = (ImageButton) findViewById(R.id.pizza_button);
-    final ImageButton condomButton = (ImageButton) findViewById(R.id.condom_button);
-    final ImageButton newspaperButton = (ImageButton) findViewById(R.id.newspaper_button);
-    final ImageButton chipsButton = (ImageButton) findViewById(R.id.chips_button);
+    addressText = (EditText) findViewById(R.id.addressInput);
+    nameText = (EditText) findViewById(R.id.nameInput);
+
+    openingMap = new HashMap<RangeBox, List<TimePickerButton>>();
+
+    pizzaButton = (ImageButton) findViewById(R.id.pizza_button);
+    condomButton = (ImageButton) findViewById(R.id.condom_button);
+    newspaperButton = (ImageButton) findViewById(R.id.newspaper_button);
+    chipsButton = (ImageButton) findViewById(R.id.chips_button);
 
     if (android.os.Build.VERSION.SDK_INT >= 11) {
       pizzaButton.setOnClickListener(new OnClickListener() {
@@ -174,6 +204,30 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
       }
     });
 
+    addOpenings(null);
+  }
+
+  public void addOpenings(View view) {
+    final LinearLayout container = new LinearLayout(this);
+    final List<TimePickerButton> list = new ArrayList<TimePickerButton>();
+
+    final RangeBox rangeBox = new RangeBox(this);
+
+    final TimePickerButton timePickerButton = new TimePickerButton(this, 9, 30);
+    final TimePickerButton timePickerButton2 = new TimePickerButton(this, 22, 30);
+
+    final TextView textView = new TextView(this);
+    textView.setText("bis");
+
+    container.addView(rangeBox);
+    container.addView(timePickerButton);
+    container.addView(textView);
+    container.addView(timePickerButton2);
+
+    openingContainer.addView(container);
+    list.add(timePickerButton);
+    list.add(timePickerButton2);
+    openingMap.put(rangeBox, list);
   }
 
   public void moveMap(final LatLng latLng, final int zoom) {
@@ -205,4 +259,88 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     }
   }
 
+  @Override
+  public boolean onOptionsItemSelected(final MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.submit_spaeti:
+        submitSpaeti();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+
+  public void submitSpaeti() {
+    try {
+      JSONObject spaeti = new JSONObject();
+      spaeti.put("name", nameText.getText().toString());
+      JSONObject location = new JSONObject();
+      location.put("lng", marker.getPosition().longitude);
+      location.put("lat", marker.getPosition().latitude);
+      location.put("street", addressText.getText().toString());
+      spaeti.put("location", location);
+
+      JSONObject assortment = new JSONObject();
+      if (android.os.Build.VERSION.SDK_INT >= 11) {
+        assortment.put("pizza", pizzaButton.getAlpha() > 0.3 ? true : false);
+        assortment.put("condoms", condomButton.getAlpha() > 0.3 ? true : false);
+        assortment.put("newspapers", newspaperButton.getAlpha() > 0.3 ? true : false);
+        assortment.put("chips", chipsButton.getAlpha() > 0.3 ? true : false);
+      }
+      spaeti.put("assortment", assortment);
+
+      Integer[] open = new Integer[] { null, null, null, null, null, null, null };
+      Integer[] closed = new Integer[] { null, null, null, null, null, null, null };
+
+      for (RangeBox key : openingMap.keySet()) {
+        final TimePickerButton startTimePicker = openingMap.get(key).get(0);
+        final TimePickerButton endTimePicker = openingMap.get(key).get(1);
+        final Integer startTime = startTimePicker.getHourOfDay() * 100
+            + startTimePicker.getMinute();
+        final Integer endTime = endTimePicker.getHourOfDay() * 100 + endTimePicker.getMinute();
+        final String[] selected = key.getSelected();
+        for (int i = 0; i < selected.length; i++) {
+          if (selected[i] != null) {
+            open[i] = startTime;
+            closed[i] = endTime;
+          }
+        }
+      }
+
+      JSONArray openJson = new JSONArray();
+      JSONArray closedJson = new JSONArray();
+
+      for (int i = 0; i < open.length; i++) {
+        if (open[i] == null) {
+          open[i] = 0;
+        }
+        openJson.put(i, open[i]);
+        if (closed[i] == null) {
+          closed[i] = 0;
+        }
+        closedJson.put(i, closed[i]);
+      }
+
+      JSONObject businessHours = new JSONObject();
+      businessHours.put("opened", openJson);
+      businessHours.put("closed", closedJson);
+
+      spaeti.put("businessHours", businessHours);
+
+      JsonUtil.putJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", spaeti.toString(),
+          new Handler(new Handler.Callback() {
+
+            @Override
+            public boolean handleMessage(Message msg) {
+              Log.d(AddSpaetiActivity.class.toString(),
+                  String.valueOf(msg.getData().getInt("status")));
+              return false;
+            }
+          }));
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+  }
 }

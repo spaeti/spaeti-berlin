@@ -1,10 +1,14 @@
 package de.spaetiberlin.app;
 
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.Display;
 import android.view.View;
+import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -125,6 +129,17 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
           .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(myIntent);
     }
+  }
+
+  public void showTimePicker() {
+    new TimePickerDialog(this, new OnTimeSetListener() {
+
+      @Override
+      public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        // TODO Auto-generated method stub
+
+      }
+    }, 9, 30, DateFormat.is24HourFormat(this));
   }
 
 }

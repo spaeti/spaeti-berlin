@@ -40,18 +40,20 @@ public class RangeBox extends Button {
   private void init(final Context context) {
     this.setText("Mo-Fr");
 
-    final AlertDialog dialog = new AlertDialog.Builder(context).setTitle("Test")
-        .setMultiChoiceItems(items, null, new OnMultiChoiceClickListener() {
+    final AlertDialog dialog = new AlertDialog.Builder(context)
+        .setTitle("Test")
+        .setMultiChoiceItems(items, new boolean[] { true, true, true, true, true, false, false },
+            new OnMultiChoiceClickListener() {
 
-          @Override
-          public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-            if (isChecked) {
-              selected[which] = abbr[which];
-            } else {
-              selected[which] = null;
-            }
-          }
-        }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                  selected[which] = abbr[which];
+                } else {
+                  selected[which] = null;
+                }
+              }
+            }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialogs, int id) {
             RangeBox.this.setText(RangeBox.chain(new ArrayList<String>(Arrays.asList(selected)))
@@ -104,5 +106,12 @@ public class RangeBox extends Button {
       }
     }
     return chained;
+  }
+
+  /**
+   * @return the selected
+   */
+  public String[] getSelected() {
+    return selected;
   }
 }
