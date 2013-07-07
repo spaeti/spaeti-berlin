@@ -8,6 +8,7 @@
     <string name="store_image">Bild des Späti</string>
     <string name="favorite">Favorit</string>
     <string name="openings">Öffnungszeiten</string>
+    <string name="inventory">Angebot</string>
     <string name="monday">Montag</string>
     <string name="tuesday">Dienstag</string>
     <string name="wednesday">Mittwoch</string>
@@ -20,5 +21,14 @@
     <string name="spaeti_logo">Logo</string>
     <string name="action_search">Suchen</string>
     <string name="search_hint">Strasse, U-Bahnhof, Späti usw.</string>
+    <string name="adress">Adresse</string>
+    <string name="name">Name</string>
+    <string name="submit_spaeti">Absenden</string>
+    <string name="move_marker_or_enter">Marker verschieben oder eintragen</string>
+    <string name="search_adress">Ort suchen</string>
+    <string name="pizza">Pizza</string>
+    <string name="chips">Chips</string>
+    <string name="condom">Kondome</string>
+    <string name="newspaper">Zeitungen</string>
 
 </resources>

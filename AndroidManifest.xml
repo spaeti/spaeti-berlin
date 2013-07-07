@@ -33,6 +33,8 @@
         </activity>
         <activity android:name="de.spaetiberlin.app.AboutActivity" >
         </activity>
+        <activity android:name="de.spaetiberlin.app.AddSpaetiActivity" >
+        </activity>
         <activity android:name="de.spaetiberlin.app.SettingsActivity" >
         </activity>
         <activity

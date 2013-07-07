@@ -43,7 +43,8 @@
                     android:id="@+id/shopNameText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/shopAdressText"
@@ -71,7 +72,7 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:background="#00aa00" />
 
         <LinearLayout
@@ -84,8 +85,9 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
                 android:text="@string/openings"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:textSize="24sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -225,7 +227,7 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:background="#aaaaaa" />
     </LinearLayout>
 

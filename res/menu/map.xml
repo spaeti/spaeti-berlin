@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_search"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        android:icon="@drawable/abs__ic_search"
+        android:showAsAction="always|collapseActionView"
+        android:title="@string/action_search"/>
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/content_new"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_add"/>
+    <item
+        android:id="@+id/action_favorites"
+        android:icon="@drawable/rating_important"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_favorites"/>
+
+</menu>
