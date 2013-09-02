@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
@@ -19,13 +20,13 @@ import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -76,6 +77,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
     if (android.os.Build.VERSION.SDK_INT >= 11) {
       pizzaButton.setOnClickListener(new OnClickListener() {
+
         @Override
         public void onClick(final View v) {
           if (pizzaButton.getAlpha() > 0.3) {
@@ -86,6 +88,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         }
       });
       condomButton.setOnClickListener(new OnClickListener() {
+
         @Override
         public void onClick(final View v) {
           if (condomButton.getAlpha() > 0.3) {
@@ -96,6 +99,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         }
       });
       newspaperButton.setOnClickListener(new OnClickListener() {
+
         @Override
         public void onClick(final View v) {
           if (newspaperButton.getAlpha() > 0.3) {
@@ -106,6 +110,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         }
       });
       chipsButton.setOnClickListener(new OnClickListener() {
+
         @Override
         public void onClick(final View v) {
           if (chipsButton.getAlpha() > 0.3) {
@@ -329,14 +334,25 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
       JsonUtil.putJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", spaeti.toString(),
           new Handler(new Handler.Callback() {
-
             @Override
             public boolean handleMessage(Message msg) {
-              Log.d(AddSpaetiActivity.class.toString(),
-                  String.valueOf(msg.getData().getInt("status")));
+              if (msg.getData().getInt("status") == 200) {
+                Toast toast = Toast.makeText(AddSpaetiActivity.this, "Späti erfolgreich erstellt",
+                    Toast.LENGTH_LONG);
+                toast.show();
+              } else {
+                Toast toast = Toast.makeText(AddSpaetiActivity.this, "Fehler beim erstellen.",
+                    Toast.LENGTH_LONG);
+                toast.show();
+              }
               return false;
             }
           }));
+
+      Intent intent = new Intent(this, MainActivity.class)
+          .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+      startActivity(intent);
 
     } catch (JSONException e) {
       e.printStackTrace();

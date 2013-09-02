@@ -56,17 +56,17 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
     switch (item.getItemId()) {
-      case android.R.id.home:
-        sidemenu.toggle();
-        return true;
-      case R.id.action_add:
-        goToAddSpaeti();
-        return true;
-      case R.id.action_favorites:
-        goToFavorites();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
+    case android.R.id.home:
+      sidemenu.toggle();
+      return true;
+    case R.id.action_add:
+      goToAddSpaeti();
+      return true;
+    case R.id.action_favorites:
+      goToFavorites();
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
     }
   }
 
@@ -84,6 +84,7 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
   public void goToAddSpaeti() {
     if (!this.getClass().getSimpleName().equals(AddSpaetiActivity.class.getSimpleName())) {
       final Intent myIntent = new Intent(this, AddSpaetiActivity.class);
+      myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(myIntent);
     }
   }

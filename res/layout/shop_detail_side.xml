@@ -82,7 +82,6 @@
             android:padding="10dp" >
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
@@ -118,15 +117,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/tuesday"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#55aa55" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/tuesdayOpen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#55aa55" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
             </LinearLayout>
 
             <LinearLayout
@@ -229,6 +226,59 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="#aaaaaa" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/inventory"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp" >
+
+                <ImageView
+                    android:id="@+id/pizzaImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/pizza"
+                    android:src="@drawable/pizza"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/condomImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/condom"
+                    android:src="@drawable/condom"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/newspaperImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/newspaper"
+                    android:src="@drawable/newspaper"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/chipsImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/chips"
+                    android:src="@drawable/chips"
+                    android:visibility="invisible" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

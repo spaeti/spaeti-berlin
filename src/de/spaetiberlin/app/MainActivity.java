@@ -1,6 +1,7 @@
 package de.spaetiberlin.app;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -12,14 +13,17 @@ import org.json.JSONObject;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -40,13 +44,15 @@ import de.spaetiberlin.app.util.JsonUtil;
 public class MainActivity extends SpaetiAbstractActivity {
 
   protected GoogleMap map;
+  protected SlidingMenu shopInfo;
+  private final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    final SlidingMenu shopInfo = new SlidingMenu(this);
+    shopInfo = new SlidingMenu(this);
     shopInfo.setMode(SlidingMenu.RIGHT);
     shopInfo.setSlidingEnabled(false);
     shopInfo.setFadeEnabled(false);
@@ -61,6 +67,41 @@ public class MainActivity extends SpaetiAbstractActivity {
         sidemenu.setSlidingEnabled(true);
       }
     });
+
+    final int darkGreen = Color.parseColor("#55aa55");
+
+    switch (dayOfWeek) {
+      case 1:
+        ((TextView) findViewById(R.id.sunday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.sundayOpen)).setTextColor(darkGreen);
+        break;
+      case 2:
+        ((TextView) findViewById(R.id.monday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.mondayOpen)).setTextColor(darkGreen);
+        break;
+      case 3:
+        ((TextView) findViewById(R.id.tuesday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.tuesdayOpen)).setTextColor(darkGreen);
+        break;
+      case 4:
+        ((TextView) findViewById(R.id.wednesday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.wednesdayOpen)).setTextColor(darkGreen);
+        break;
+      case 5:
+        ((TextView) findViewById(R.id.thursday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.thursdayOpen)).setTextColor(darkGreen);
+        break;
+      case 6:
+        ((TextView) findViewById(R.id.friday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.fridayOpen)).setTextColor(darkGreen);
+        break;
+      case 7:
+        ((TextView) findViewById(R.id.saturday)).setTextColor(darkGreen);
+        ((TextView) findViewById(R.id.saturdayOpen)).setTextColor(darkGreen);
+        break;
+      default:
+        // this can not logically happen
+    }
 
     final Map<String, String> markersAndStores = new HashMap<String, String>();
 
@@ -97,9 +138,13 @@ public class MainActivity extends SpaetiAbstractActivity {
                   final JSONObject businessHours = jsonObject.getJSONObject("businessHours");
                   final JSONArray opened = businessHours.getJSONArray("opened");
                   final JSONArray closed = businessHours.getJSONArray("closed");
+
+                  final JSONObject assortment = jsonObject.getJSONObject("assortment");
+
                   ((TextView) findViewById(R.id.shopNameText)).setText(jsonObject.getString("name"));
                   ((TextView) findViewById(R.id.shopAdressText)).setText(jsonObject.getJSONObject(
                       "location").getString("street"));
+
                   ((TextView) findViewById(R.id.mondayOpen)).setText(convertToTime(opened.getInt(0))
                       + " - " + convertToTime(closed.getInt(0)));
                   ((TextView) findViewById(R.id.tuesdayOpen)).setText(convertToTime(opened
@@ -114,6 +159,20 @@ public class MainActivity extends SpaetiAbstractActivity {
                       .getInt(5)) + " - " + convertToTime(closed.getInt(5)));
                   ((TextView) findViewById(R.id.sundayOpen)).setText(convertToTime(opened.getInt(6))
                       + " - " + convertToTime(closed.getInt(6)));
+
+                  final Boolean pizza = assortment.getBoolean("pizza");
+                  final Boolean condom = assortment.getBoolean("condoms");
+                  final Boolean newspapers = assortment.getBoolean("newspapers");
+                  final Boolean chips = assortment.getBoolean("chips");
+
+                  ((ImageView) findViewById(R.id.pizzaImage)).setVisibility(pizza ? View.VISIBLE
+                      : View.INVISIBLE);
+                  ((ImageView) findViewById(R.id.condomImage)).setVisibility(condom ? View.VISIBLE
+                      : View.INVISIBLE);
+                  ((ImageView) findViewById(R.id.newspaperImage))
+                      .setVisibility(newspapers ? View.VISIBLE : View.INVISIBLE);
+                  ((ImageView) findViewById(R.id.chipsImage)).setVisibility(chips ? View.VISIBLE
+                      : View.INVISIBLE);
                 } catch (final JSONException e) {
                   e.printStackTrace();
                 }
@@ -134,11 +193,25 @@ public class MainActivity extends SpaetiAbstractActivity {
               for (int i = 0; i < jsonArray.length(); i++) {
                 final JSONObject jsonObject = jsonArray.getJSONObject(i);
                 final JSONObject spaetiLocation = jsonObject.getJSONObject("location");
+                final JSONObject businessHours = jsonObject.getJSONObject("businessHours");
+                final JSONArray opened = businessHours.getJSONArray("opened");
+                final JSONArray closed = businessHours.getJSONArray("closed");
+
+                int newDayOfWeek = dayOfWeek - 1;
+                if (dayOfWeek == 1) {
+                  newDayOfWeek = 6;
+                }
+
                 markersAndStores.put(
                     map.addMarker(
-                        new MarkerOptions().position(
-                            new LatLng(spaetiLocation.getDouble("lat"), spaetiLocation
-                                .getDouble("lng"))).title(jsonObject.getString("name"))).getId(),
+                        new MarkerOptions()
+                            .position(
+                                new LatLng(spaetiLocation.getDouble("lat"), spaetiLocation
+                                    .getDouble("lng")))
+                            .title(jsonObject.getString("name"))
+                            .snippet(
+                                "geöffnet: " + convertToTime(opened.getInt(newDayOfWeek)) + " - "
+                                    + convertToTime(closed.getInt(newDayOfWeek)))).getId(),
                     jsonObject.getString("_id"));
               }
             } catch (final JSONException e) {
@@ -192,6 +265,18 @@ public class MainActivity extends SpaetiAbstractActivity {
         e.printStackTrace();
       }
     }
+  }
+
+  @Override
+  public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+      if (shopInfo.isMenuShowing()) {
+        shopInfo.showContent();
+        return true;
+      }
+    }
+    return super.onKeyDown(keyCode, event);
+
   }
 
   @Override
