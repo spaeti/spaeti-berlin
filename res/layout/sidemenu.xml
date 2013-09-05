@@ -13,7 +13,6 @@
             android:layout_width="fill_parent"
             android:layout_height="155dp"
             android:background="#333333"
-            android:onClick="goToAddSpaeti"
             android:orientation="vertical"
             android:paddingTop="10dp" >
 

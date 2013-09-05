@@ -40,7 +40,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import de.spaetiberlin.app.util.GeoUtil;
-import de.spaetiberlin.app.util.JsonUtil;
+import de.spaetiberlin.app.util.ServerUtil;
 import de.spaetiberlin.app.widgets.RangeBox;
 import de.spaetiberlin.app.widgets.TimePickerButton;
 
@@ -251,6 +251,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
   public boolean onCreateOptionsMenu(final Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getSupportMenuInflater().inflate(R.menu.add_spaeti, menu);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     return true;
   }
 
@@ -269,6 +270,9 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     switch (item.getItemId()) {
       case R.id.submit_spaeti:
         submitSpaeti();
+        return true;
+      case android.R.id.home:
+        finish();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -332,12 +336,12 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
       spaeti.put("businessHours", businessHours);
 
-      JsonUtil.putJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", spaeti.toString(),
+      ServerUtil.postJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", spaeti.toString(),
           new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
               if (msg.getData().getInt("status") == 200) {
-                Toast toast = Toast.makeText(AddSpaetiActivity.this, "Sp‰ti erfolgreich erstellt",
+                Toast toast = Toast.makeText(AddSpaetiActivity.this, "Späti erfolgreich erstellt",
                     Toast.LENGTH_LONG);
                 toast.show();
               } else {

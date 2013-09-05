@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="9"
+        android:targetSdkVersion="18" />
 
     <permission
         android:name="de.spaetiberlin.app.permission.MAPS_RECEIVE"
@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -29,13 +30,21 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
-        <activity android:name="de.spaetiberlin.app.FavoriteActivity" >
+        <activity
+            android:name="de.spaetiberlin.app.FavoriteActivity"
+            android:label="@string/action_favorites" >
         </activity>
-        <activity android:name="de.spaetiberlin.app.AboutActivity" >
+        <activity
+            android:name="de.spaetiberlin.app.AboutActivity"
+            android:label="@string/action_about" >
         </activity>
-        <activity android:name="de.spaetiberlin.app.AddSpaetiActivity" >
+        <activity
+            android:name="de.spaetiberlin.app.AddSpaetiActivity"
+            android:label="@string/action_add" >
         </activity>
-        <activity android:name="de.spaetiberlin.app.SettingsActivity" >
+        <activity
+            android:name="de.spaetiberlin.app.SettingsActivity"
+            android:label="@string/action_settings" >
         </activity>
         <activity
             android:name="de.spaetiberlin.app.MainActivity"

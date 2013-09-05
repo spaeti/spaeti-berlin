@@ -1,14 +1,10 @@
 package de.spaetiberlin.app;
 
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.Display;
 import android.view.View;
-import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -37,8 +33,11 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
 
     sidemenu = new SlidingMenu(this);
     sidemenu.setMode(SlidingMenu.LEFT);
-    sidemenu.setFadeDegree(0.35f);
+    sidemenu.setFadeEnabled(true);
+    sidemenu.setFadeDegree(0.50f);
     sidemenu.setBehindWidth((int) (width / 1.5));
+    sidemenu.setShadowWidth(20);
+    sidemenu.setBehindScrollScale(0);
     sidemenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
     sidemenu.setMenu(R.layout.sidemenu);
 
@@ -56,17 +55,17 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
   @Override
   public boolean onOptionsItemSelected(final MenuItem item) {
     switch (item.getItemId()) {
-    case android.R.id.home:
-      sidemenu.toggle();
-      return true;
-    case R.id.action_add:
-      goToAddSpaeti();
-      return true;
-    case R.id.action_favorites:
-      goToFavorites();
-      return true;
-    default:
-      return super.onOptionsItemSelected(item);
+      case android.R.id.home:
+        sidemenu.toggle();
+        return true;
+      case R.id.action_add:
+        goToAddSpaeti();
+        return true;
+      case R.id.action_favorites:
+        goToFavorites();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
   }
 
@@ -130,17 +129,6 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
           .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(myIntent);
     }
-  }
-
-  public void showTimePicker() {
-    new TimePickerDialog(this, new OnTimeSetListener() {
-
-      @Override
-      public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // TODO Auto-generated method stub
-
-      }
-    }, 9, 30, DateFormat.is24HourFormat(this));
   }
 
 }

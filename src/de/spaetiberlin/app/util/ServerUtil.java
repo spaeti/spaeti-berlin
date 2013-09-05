@@ -1,6 +1,8 @@
 package de.spaetiberlin.app.util;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,14 +18,51 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-public class JsonUtil {
+public class ServerUtil {
 
-  public static void putJSON(final String url, final String body, final Handler handler) {
+  public static void updateSpaetis(final Context context, final CallBackHandler callBackHandler) {
+    ServerUtil.getJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", new Handler(
+        new Handler.Callback() {
+
+          @Override
+          public boolean handleMessage(final Message msg) {
+            try {
+              final FileOutputStream fos = context.openFileOutput("spaetis.json",
+                  Context.MODE_PRIVATE);
+              fos.write(msg.getData().getString("json").getBytes());
+              fos.close();
+              callBackHandler.callBack();
+
+            } catch (final IOException e) {
+              e.printStackTrace();
+            }
+
+            return true;
+          }
+        }));
+  }
+
+  public static String getStringFromFile(final String filePath, final Context context)
+      throws IOException {
+    final FileInputStream in = context.openFileInput(filePath);
+    final InputStreamReader inputStreamReader = new InputStreamReader(in);
+    final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    final StringBuilder sb = new StringBuilder();
+    String line;
+    while ((line = bufferedReader.readLine()) != null) {
+      sb.append(line);
+    }
+
+    return sb.toString();
+  }
+
+  public static void postJSON(final String url, final String body, final Handler handler) {
     final Thread thread = new Thread() {
 
       @Override
@@ -34,7 +73,7 @@ public class JsonUtil {
 
         try {
           httpPost.setEntity(new StringEntity(body, "UTF8"));
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
           e.printStackTrace();
         }
 
@@ -85,7 +124,7 @@ public class JsonUtil {
               builder.append(line);
             }
           } else {
-            Log.e(JsonUtil.class.toString(), "Failed to download file");
+            Log.e(ServerUtil.class.toString(), "Failed to download file");
           }
         } catch (final ClientProtocolException e) {
           e.printStackTrace();
