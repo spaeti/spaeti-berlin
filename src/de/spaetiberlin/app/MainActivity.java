@@ -24,12 +24,15 @@ import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -42,8 +45,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.OnClosedListener;
 
 import de.spaetiberlin.app.models.Shop;
 import de.spaetiberlin.app.util.CallBackHandler;
@@ -54,7 +55,8 @@ import de.spaetiberlin.app.util.ServerUtil;
 public class MainActivity extends SpaetiAbstractActivity {
 
   protected GoogleMap map;
-  protected SlidingMenu shopInfo;
+  protected DrawerLayout drawerLayout;
+  private ScrollView shopInfo;
   private Shop selectedShop;
   private List<String> favorites;
   private final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
@@ -66,24 +68,9 @@ public class MainActivity extends SpaetiAbstractActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // initiate the shopinfo slide menu to the right
-    shopInfo = new SlidingMenu(this);
-    shopInfo.setMode(SlidingMenu.RIGHT);
-    shopInfo.setSlidingEnabled(false);
-    shopInfo.setFadeEnabled(false);
-    shopInfo.setBehindScrollScale(0);
-    shopInfo.setBehindWidth((int) (width / 1.2));
-    shopInfo.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-    shopInfo.setMenu(R.layout.shop_detail_side);
-    shopInfo.setOnClosedListener(new OnClosedListener() {
-
-      @Override
-      public void onClosed() {
-        shopInfo.setSlidingEnabled(false);
-        sidemenu.setSlidingEnabled(true);
-      }
-    });
-
+    drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    drawerLayout.setScrimColor(Color.parseColor("#99eeeeee"));
+    shopInfo = (ScrollView) findViewById(R.id.right_drawer);
     // get all the views in the shop info
     final TextView shopNameText = (TextView) findViewById(R.id.shopNameText);
     final TextView shopAdressText = (TextView) findViewById(R.id.shopAdressText);
@@ -196,17 +183,10 @@ public class MainActivity extends SpaetiAbstractActivity {
     map.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 
       @Override
-      public void onInfoWindowClick(final Marker arg0) {
-        shopInfo.showMenu();
-        shopInfo.setSlidingEnabled(true);
-        sidemenu.setSlidingEnabled(false);
-        try {
-          selectedShop = markersAndStores.get(arg0.getId());
+      public void onInfoWindowClick(final Marker clickedMarker) {
 
-          new DownloadImageTask(spaetiImage)
-              .execute("http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
-                  + selectedShop.lat + "," + selectedShop.lng
-                  + "&fov=120&heading=0&pitch=10&sensor=true");
+        try {
+          selectedShop = markersAndStores.get(clickedMarker.getId());
 
           shopNameText.setText(selectedShop.name);
           shopAdressText.setText(selectedShop.street);
@@ -239,6 +219,34 @@ public class MainActivity extends SpaetiAbstractActivity {
         } catch (final JSONException e) {
           e.printStackTrace();
         }
+        drawerLayout.openDrawer(shopInfo);
+        drawerLayout.setDrawerListener(new DrawerListener() {
+
+          @Override
+          public void onDrawerStateChanged(int status) {
+
+          }
+
+          @Override
+          public void onDrawerSlide(View arg0, float arg1) {
+
+          }
+
+          @Override
+          public void onDrawerOpened(View arg0) {
+
+            new DownloadImageTask(spaetiImage)
+                .execute("http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
+                    + selectedShop.lat + "," + selectedShop.lng
+                    + "&fov=120&heading=0&pitch=10&sensor=true");
+          }
+
+          @Override
+          public void onDrawerClosed(View arg0) {
+
+          }
+        });
+
       }
     });
 
@@ -354,10 +362,10 @@ public class MainActivity extends SpaetiAbstractActivity {
   @Override
   public boolean onKeyDown(final int keyCode, final KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-      if (shopInfo.isMenuShowing()) {
-        shopInfo.showContent();
-        return true;
-      }
+      // if (shopInfo.isMenuShowing()) {
+      // shopInfo.showContent();
+      // return true;
+      // }
     }
     return super.onKeyDown(keyCode, event);
 
@@ -367,16 +375,12 @@ public class MainActivity extends SpaetiAbstractActivity {
   public boolean onOptionsItemSelected(final MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        if (shopInfo.isMenuShowing()) {
-          shopInfo.showContent();
+        if (drawerLayout.isDrawerVisible(shopInfo)) {
+          drawerLayout.closeDrawer(shopInfo);
           return true;
         }
         sidemenu.toggle();
         return true;
-      case R.id.action_search:
-        if (shopInfo.isMenuShowing()) {
-          shopInfo.showContent();
-        }
       default:
         return super.onOptionsItemSelected(item);
     }
