@@ -3,6 +3,8 @@ gen/
 
 libs/
 
+*.DS_Store
+
 # Package Files #
 *.jar
 *.war

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -107,6 +108,17 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
   // for starting in the menu
   public void goToFavorites(final View view) {
     goToFavorites();
+  }
+
+  @Override
+  public boolean onKeyDown(final int keycode, final KeyEvent e) {
+    switch (keycode) {
+      case KeyEvent.KEYCODE_MENU:
+        sidemenu.showMenu();
+        return true;
+    }
+
+    return super.onKeyDown(keycode, e);
   }
 
   public void goToSettings(final View view) {

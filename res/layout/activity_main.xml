@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -30,13 +29,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_margin="5dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/rounded_corners"
-                android:baselineAligned="false"
-                android:orientation="vertical"
+                android:gravity="center"
                 android:padding="4dp" >
 
                 <ImageView
@@ -45,12 +46,23 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/store_image"
                     android:scaleType="fitXY" />
-            </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/imageLoadingIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:indeterminateOnly="true"
+                    android:keepScreenOn="true" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/rounded_corners"
                 android:baselineAligned="false"
                 android:orientation="vertical"
@@ -70,7 +82,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="15sp" />
 
-                <View
+<!--                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="1dp"
                     android:layout_margin="5dp"
@@ -119,13 +131,16 @@
                         android:contentDescription="@string/favorite"
                         android:onClick="navigateToSelected"
                         android:src="@drawable/directions" />
-                </LinearLayout>
+                </LinearLayout> -->
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/rounded_corners"
                 android:baselineAligned="false"
                 android:orientation="vertical"
@@ -289,7 +304,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/rounded_corners"
                 android:baselineAligned="false"
                 android:orientation="vertical"

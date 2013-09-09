@@ -45,15 +45,15 @@ public class GeoUtil {
   public static String getNameFromLocation(final double lat, final double lng, final Context context)
       throws IOException {
     final Geocoder gc = new Geocoder(context, Locale.getDefault());
-    Address address = null;
     if (Geocoder.isPresent()) {
       final List<Address> list = gc.getFromLocation(lat, lng, 1);
 
       if (list.size() > 0) {
-        address = list.get(0);
+        final Address address = list.get(0);
+        return address.getAddressLine(0);
       }
     }
-    return address.getAddressLine(0);
+    return "Fehler, bitte manuell eintragen";
   }
 
 }

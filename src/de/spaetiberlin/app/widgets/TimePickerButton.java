@@ -14,7 +14,7 @@ public class TimePickerButton extends Button implements TimePickerDialog.OnTimeS
   protected int hourOfDay = 9;
   protected int minute = 30;
 
-  public TimePickerButton(Context context, int startHour, int startMinute) {
+  public TimePickerButton(final Context context, final int startHour, final int startMinute) {
     super(context);
     this.hourOfDay = startHour;
     this.minute = startMinute;
@@ -23,14 +23,15 @@ public class TimePickerButton extends Button implements TimePickerDialog.OnTimeS
     this.setOnClickListener(new OnClickListener() {
 
       @Override
-      public void onClick(View v) {
+      public void onClick(final View v) {
         dialog.show();
       }
     });
     this.setText(hourOfDay + ":" + minute);
   }
 
-  public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+  @Override
+  public void onTimeSet(final TimePicker view, final int hourOfDay, final int minute) {
     this.hourOfDay = hourOfDay;
     this.minute = minute;
     this.setText(hourOfDay + ":" + minute);

@@ -15,12 +15,12 @@ import android.widget.Button;
 
 public class RangeBox extends Button {
 
-  private String[] items = new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag",
+  private final String[] items = new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag",
       "Freitag", "Samstag", "Sonntag" };
 
-  private String[] abbr = new String[] { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
+  private final String[] abbr = new String[] { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
-  private String[] selected = new String[] { "Mo", "Di", "Mi", "Do", "Fr", null, null };
+  private final String[] selected = new String[] { "Mo", "Di", "Mi", "Do", "Fr", null, null };
 
   public RangeBox(final Context context) {
     super(context);
@@ -46,7 +46,8 @@ public class RangeBox extends Button {
             new OnMultiChoiceClickListener() {
 
               @Override
-              public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+              public void onClick(final DialogInterface dialog, final int which,
+                  final boolean isChecked) {
                 if (isChecked) {
                   selected[which] = abbr[which];
                 } else {
@@ -55,13 +56,13 @@ public class RangeBox extends Button {
               }
             }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
           @Override
-          public void onClick(DialogInterface dialogs, int id) {
+          public void onClick(final DialogInterface dialogs, final int id) {
             RangeBox.this.setText(RangeBox.chain(new ArrayList<String>(Arrays.asList(selected)))
                 .replaceAll(", $", ""));
           }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
           @Override
-          public void onClick(DialogInterface dialog, int id) {
+          public void onClick(final DialogInterface dialog, final int id) {
           }
         }).create();
 
@@ -74,7 +75,7 @@ public class RangeBox extends Button {
     });
   }
 
-  private static String chain(List<String> list) {
+  private static String chain(final List<String> list) {
     Collections.reverse(list);
 
     String chained = "";
