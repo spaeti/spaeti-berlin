@@ -1,4 +1,0 @@
-include ':C::Users:Johann:Desktop:Projects:spaeti-workspace:SpaetiBerlin:libs:SlidingMenu-master:library'
-include ':C::Users:Johann:Desktop:Projects:spaeti-workspace:SpaetiBerlin:libs:google-play-services_lib'
-include ':C::Users:Johann:Desktop:Projects:spaeti-workspace:SpaetiBerlin'
-include ':C::Users:Johann:Desktop:Projects:spaeti-workspace:SpaetiBerlin:libs:JakeWharton-ActionBarSherlock-071a61c:actionbarsherlock'

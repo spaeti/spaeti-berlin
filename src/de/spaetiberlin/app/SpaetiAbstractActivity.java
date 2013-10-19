@@ -12,6 +12,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
 
+import de.spaetiberlin.app.models.Shop;
+
 public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
 
   protected int width;
@@ -65,20 +67,34 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
       case R.id.action_favorites:
         goToFavorites();
         return true;
+      case R.id.action_map:
+        goToMap(null, false);
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
   }
 
-  public void goToMap(final View view) {
+  public void goToMap(final Shop spaeti, final boolean open) {
     sidemenu.showContent();
     if (!this.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())) {
       final Intent myIntent = new Intent(this, MainActivity.class);
+      if (spaeti != null) {
+        myIntent.setAction("goToSpaeti");
+        myIntent.putExtra("lat", spaeti.lat);
+        myIntent.putExtra("lng", spaeti.lng);
+        myIntent.putExtra("id", spaeti.id);
+      }
       myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
           .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(myIntent);
     }
+  }
+
+  // for starting in the menu
+  public void goToMap(final View view) {
+    goToMap(null, false);
   }
 
   public void goToAddSpaeti() {

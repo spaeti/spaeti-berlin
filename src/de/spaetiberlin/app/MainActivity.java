@@ -67,6 +67,26 @@ public class MainActivity extends SpaetiAbstractActivity {
   final Map<String, Shop> storeMap = new HashMap<String, Shop>();
   private SharedPreferences settings;
 
+  TextView shopNameText;
+  TextView shopAdressText;
+
+  TextView mondayOpenText;
+  TextView tuesdayOpenText;
+  TextView wednesdayOpenText;
+  TextView thursdayOpenText;
+  TextView fridayOpenText;
+  TextView saturdayOpenText;
+  TextView sundayOpenText;
+
+  ImageView spaetiImage;
+  ImageView chipsImage;
+  ImageView pizzaImage;
+  ImageView condomImage;
+  ImageView newspaperImage;
+
+  ProgressBar imageLoadingIndicator;
+  DisplayImageOptions displayImageOptions;
+
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -79,9 +99,8 @@ public class MainActivity extends SpaetiAbstractActivity {
     final ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
         getApplicationContext()).build();
     ImageLoader.getInstance().init(config);
-    final DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-        .resetViewBeforeLoading(true).cacheInMemory(true).displayer(new FadeInBitmapDisplayer(300))
-        .build();
+    displayImageOptions = new DisplayImageOptions.Builder().resetViewBeforeLoading(true)
+        .cacheInMemory(true).displayer(new FadeInBitmapDisplayer(300)).build();
 
     // initialize shopinfo drawer to the right
     drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,24 +109,24 @@ public class MainActivity extends SpaetiAbstractActivity {
     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, shopInfo);
 
     // get all the views in the shop info
-    final TextView shopNameText = (TextView) findViewById(R.id.shopNameText);
-    final TextView shopAdressText = (TextView) findViewById(R.id.shopAdressText);
+    shopNameText = (TextView) findViewById(R.id.shopNameText);
+    shopAdressText = (TextView) findViewById(R.id.shopAdressText);
 
-    final TextView mondayOpenText = (TextView) findViewById(R.id.mondayOpen);
-    final TextView tuesdayOpenText = (TextView) findViewById(R.id.tuesdayOpen);
-    final TextView wednesdayOpenText = (TextView) findViewById(R.id.wednesdayOpen);
-    final TextView thursdayOpenText = (TextView) findViewById(R.id.thursdayOpen);
-    final TextView fridayOpenText = (TextView) findViewById(R.id.fridayOpen);
-    final TextView saturdayOpenText = (TextView) findViewById(R.id.saturdayOpen);
-    final TextView sundayOpenText = (TextView) findViewById(R.id.sundayOpen);
+    mondayOpenText = (TextView) findViewById(R.id.mondayOpen);
+    tuesdayOpenText = (TextView) findViewById(R.id.tuesdayOpen);
+    wednesdayOpenText = (TextView) findViewById(R.id.wednesdayOpen);
+    thursdayOpenText = (TextView) findViewById(R.id.thursdayOpen);
+    fridayOpenText = (TextView) findViewById(R.id.fridayOpen);
+    saturdayOpenText = (TextView) findViewById(R.id.saturdayOpen);
+    sundayOpenText = (TextView) findViewById(R.id.sundayOpen);
 
-    final ImageView spaetiImage = (ImageView) findViewById(R.id.spaetiImage);
-    final ImageView chipsImage = (ImageView) findViewById(R.id.chipsImage);
-    final ImageView pizzaImage = (ImageView) findViewById(R.id.pizzaImage);
-    final ImageView condomImage = (ImageView) findViewById(R.id.condomImage);
-    final ImageView newspaperImage = (ImageView) findViewById(R.id.newspaperImage);
+    spaetiImage = (ImageView) findViewById(R.id.spaetiImage);
+    chipsImage = (ImageView) findViewById(R.id.chipsImage);
+    pizzaImage = (ImageView) findViewById(R.id.pizzaImage);
+    condomImage = (ImageView) findViewById(R.id.condomImage);
+    newspaperImage = (ImageView) findViewById(R.id.newspaperImage);
 
-    final ProgressBar imageLoadingIndicator = (ProgressBar) findViewById(R.id.imageLoadingIndicator);
+    imageLoadingIndicator = (ProgressBar) findViewById(R.id.imageLoadingIndicator);
 
     // make today green
     final int darkGreen = Color.parseColor("#55aa55");
@@ -197,72 +216,78 @@ public class MainActivity extends SpaetiAbstractActivity {
       @Override
       public void onInfoWindowClick(final Marker clickedMarker) {
 
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, shopInfo);
-        try {
-          selectedShop = markersAndStores.get(clickedMarker.getId());
+        selectedShop = markersAndStores.get(clickedMarker.getId());
 
-          shopNameText.setText(selectedShop.name);
-          shopAdressText.setText(selectedShop.street);
-
-          mondayOpenText.setText(convertToTime(selectedShop.opened.getInt(0)) + " - "
-              + convertToTime(selectedShop.closed.getInt(0)));
-          tuesdayOpenText.setText(convertToTime(selectedShop.opened.getInt(1)) + " - "
-              + convertToTime(selectedShop.closed.getInt(1)));
-          wednesdayOpenText.setText(convertToTime(selectedShop.opened.getInt(2)) + " - "
-              + convertToTime(selectedShop.closed.getInt(2)));
-          thursdayOpenText.setText(convertToTime(selectedShop.opened.getInt(3)) + " - "
-              + convertToTime(selectedShop.closed.getInt(3)));
-          fridayOpenText.setText(convertToTime(selectedShop.opened.getInt(4)) + " - "
-              + convertToTime(selectedShop.closed.getInt(4)));
-          saturdayOpenText.setText(convertToTime(selectedShop.opened.getInt(5)) + " - "
-              + convertToTime(selectedShop.closed.getInt(5)));
-          sundayOpenText.setText(convertToTime(selectedShop.opened.getInt(6)) + " - "
-              + convertToTime(selectedShop.closed.getInt(6)));
-
-          pizzaImage.setVisibility(selectedShop.pizza ? View.VISIBLE : View.INVISIBLE);
-          condomImage.setVisibility(selectedShop.condoms ? View.VISIBLE : View.INVISIBLE);
-          newspaperImage.setVisibility(selectedShop.newspapers ? View.VISIBLE : View.INVISIBLE);
-          chipsImage.setVisibility(selectedShop.chips ? View.VISIBLE : View.INVISIBLE);
-
-        } catch (final JSONException e) {
-          e.printStackTrace();
-        }
-        ImageLoader.getInstance().displayImage(
-            "http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
-                + selectedShop.lat + "," + selectedShop.lng
-                + "&fov=120&heading=0&pitch=10&sensor=true", spaetiImage, displayImageOptions,
-            new SimpleImageLoadingListener() {
-
-              @Override
-              public void onLoadingStarted(final String imageUri, final View view) {
-                imageLoadingIndicator.setVisibility(View.VISIBLE);
-              }
-
-              @Override
-              public void onLoadingComplete(final String imageUri, final View view,
-                  final Bitmap loadedImage) {
-                imageLoadingIndicator.setVisibility(View.GONE);
-              }
-            });
-        drawerLayout.openDrawer(shopInfo);
-        drawerLayout.setDrawerListener(new SimpleDrawerListener() {
-
-          @Override
-          public void onDrawerOpened(final View drawerView) {
-            supportInvalidateOptionsMenu();
-          }
-
-          @Override
-          public void onDrawerClosed(final View drawerView) {
-            supportInvalidateOptionsMenu();
-          }
-
-        });
+        showSelectedShopDetails();
 
       }
+
     });
 
     handleIntent(getIntent());
+  }
+
+  private void showSelectedShopDetails() {
+    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, shopInfo);
+
+    shopNameText.setText(selectedShop.name);
+    shopAdressText.setText(selectedShop.street);
+
+    pizzaImage.setVisibility(selectedShop.pizza ? View.VISIBLE : View.INVISIBLE);
+    condomImage.setVisibility(selectedShop.condoms ? View.VISIBLE : View.INVISIBLE);
+    newspaperImage.setVisibility(selectedShop.newspapers ? View.VISIBLE : View.INVISIBLE);
+    chipsImage.setVisibility(selectedShop.chips ? View.VISIBLE : View.INVISIBLE);
+
+    try {
+      mondayOpenText.setText(convertToTime(selectedShop.opened.getInt(0)) + " - "
+          + convertToTime(selectedShop.closed.getInt(0)));
+      tuesdayOpenText.setText(convertToTime(selectedShop.opened.getInt(1)) + " - "
+          + convertToTime(selectedShop.closed.getInt(1)));
+      wednesdayOpenText.setText(convertToTime(selectedShop.opened.getInt(2)) + " - "
+          + convertToTime(selectedShop.closed.getInt(2)));
+      thursdayOpenText.setText(convertToTime(selectedShop.opened.getInt(3)) + " - "
+          + convertToTime(selectedShop.closed.getInt(3)));
+      fridayOpenText.setText(convertToTime(selectedShop.opened.getInt(4)) + " - "
+          + convertToTime(selectedShop.closed.getInt(4)));
+      saturdayOpenText.setText(convertToTime(selectedShop.opened.getInt(5)) + " - "
+          + convertToTime(selectedShop.closed.getInt(5)));
+      sundayOpenText.setText(convertToTime(selectedShop.opened.getInt(6)) + " - "
+          + convertToTime(selectedShop.closed.getInt(6)));
+
+    } catch (final JSONException e) {
+      e.printStackTrace();
+    }
+
+    ImageLoader.getInstance().displayImage(
+        "http://maps.googleapis.com/maps/api/streetview?size=600x300&location=" + selectedShop.lat
+            + "," + selectedShop.lng + "&fov=120&heading=0&pitch=10&sensor=true", spaetiImage,
+        displayImageOptions, new SimpleImageLoadingListener() {
+
+          @Override
+          public void onLoadingStarted(final String imageUri, final View view) {
+            imageLoadingIndicator.setVisibility(View.VISIBLE);
+          }
+
+          @Override
+          public void onLoadingComplete(final String imageUri, final View view,
+              final Bitmap loadedImage) {
+            imageLoadingIndicator.setVisibility(View.GONE);
+          }
+        });
+    drawerLayout.openDrawer(shopInfo);
+    drawerLayout.setDrawerListener(new SimpleDrawerListener() {
+
+      @Override
+      public void onDrawerOpened(final View drawerView) {
+        supportInvalidateOptionsMenu();
+      }
+
+      @Override
+      public void onDrawerClosed(final View drawerView) {
+        supportInvalidateOptionsMenu();
+      }
+
+    });
   }
 
   private void loadSpaetis() {
@@ -399,6 +424,19 @@ public class MainActivity extends SpaetiAbstractActivity {
       };
 
       thread.run();
+    }
+    if ("goToSpaeti".equals(intent.getAction())) {
+      try {
+        final Bundle bundle = intent.getExtras();
+        moveMap(bundle.getDouble("lat"), bundle.getDouble("lng"));
+        final String id = bundle.getString("id");
+        if (id != null) {
+          selectedShop = storeMap.get(id);
+          showSelectedShopDetails();
+        }
+      } catch (final Exception e) {
+        moveMap(GeoUtil.BERLIN, 11);
+      }
     }
   }
 

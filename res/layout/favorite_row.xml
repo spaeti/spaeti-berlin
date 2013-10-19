@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip" >
+
+    <ImageView
+        android:id="@+id/place"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/firstLine"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="TODO"
+        android:src="@drawable/location_place_dark" />
+
+<!-- 
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/firstLine"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="TODO"
+        android:src="@drawable/content_remove" />
+ -->
+    <TextView
+        android:id="@+id/secondLine"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/place"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="Name"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/secondLine"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/place"
+        android:gravity="center_vertical"
+        android:text="Address"
+        android:textSize="18sp" />
+
+</RelativeLayout>
