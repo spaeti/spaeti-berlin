@@ -177,11 +177,14 @@ public class MainActivity extends SpaetiAbstractActivity {
       moveMap(GeoUtil.BERLIN, 11);
     }
 
+    final int updateRate = settings.getInt("updateRateInHours", 24 * 5);
+
     final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
-    final Date today = new Date(System.currentTimeMillis() - 3600 * 1000);
+    final Date today = new Date(System.currentTimeMillis() - 3600000 * updateRate);
+
     try {
       final Date lastUpdate = df.parse(settings.getString("lastUpdate", "27/05/1991 00:00:00"));
-      // update the database if an hour has passed
+      // update the database if enough time has passed
       if (lastUpdate.before(today)) {
         Toast.makeText(MainActivity.this, "Aktualisiere Spätidaten", Toast.LENGTH_SHORT).show();
 

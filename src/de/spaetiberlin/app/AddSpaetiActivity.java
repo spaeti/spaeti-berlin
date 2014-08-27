@@ -10,10 +10,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +48,7 @@ import de.spaetiberlin.app.util.ServerUtil;
 import de.spaetiberlin.app.widgets.RangeBox;
 import de.spaetiberlin.app.widgets.TimePickerButton;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AddSpaetiActivity extends SherlockFragmentActivity {
 
   protected GoogleMap map;
@@ -63,6 +68,26 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_add_spaeti);
 
+    // setup the three tabs
+    final TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+    tabHost.setup();
+
+    final TabSpec spec1 = tabHost.newTabSpec("Tab 1");
+    spec1.setContent(R.id.tab1);
+    spec1.setIndicator("", getResources().getDrawable(R.drawable.location_place_dark));
+
+    final TabSpec spec2 = tabHost.newTabSpec("Tab 2");
+    spec2.setIndicator("", getResources().getDrawable(R.drawable.about_dark));
+    spec2.setContent(R.id.tab2);
+
+    final TabSpec spec3 = tabHost.newTabSpec("Tab 3");
+    spec3.setIndicator("", getResources().getDrawable(R.drawable.device_access_data_usage));
+    spec3.setContent(R.id.tab3);
+
+    tabHost.addTab(spec1);
+    tabHost.addTab(spec2);
+    tabHost.addTab(spec3);
+
     openingContainer = (LinearLayout) findViewById(R.id.openingContainer);
 
     addressText = (EditText) findViewById(R.id.addressInput);
@@ -74,53 +99,6 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     condomButton = (ImageButton) findViewById(R.id.condom_button);
     newspaperButton = (ImageButton) findViewById(R.id.newspaper_button);
     chipsButton = (ImageButton) findViewById(R.id.chips_button);
-
-    if (android.os.Build.VERSION.SDK_INT >= 11) {
-      pizzaButton.setOnClickListener(new OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-          if (pizzaButton.getAlpha() > 0.3) {
-            pizzaButton.setAlpha((float) 0.2);
-          } else {
-            pizzaButton.setAlpha((float) 1);
-          }
-        }
-      });
-      condomButton.setOnClickListener(new OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-          if (condomButton.getAlpha() > 0.3) {
-            condomButton.setAlpha((float) 0.2);
-          } else {
-            condomButton.setAlpha((float) 1);
-          }
-        }
-      });
-      newspaperButton.setOnClickListener(new OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-          if (newspaperButton.getAlpha() > 0.3) {
-            newspaperButton.setAlpha((float) 0.2);
-          } else {
-            newspaperButton.setAlpha((float) 1);
-          }
-        }
-      });
-      chipsButton.setOnClickListener(new OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-          if (chipsButton.getAlpha() > 0.3) {
-            chipsButton.setAlpha((float) 0.2);
-          } else {
-            chipsButton.setAlpha((float) 1);
-          }
-        }
-      });
-    }
 
     final ImageButton searchGeoButton = (ImageButton) findViewById(R.id.searchGeoButton);
 
@@ -145,6 +123,56 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         }
       }
     });
+
+    if (android.os.Build.VERSION.SDK_INT >= 11) {
+      pizzaButton.setOnClickListener(new OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+          if (pizzaButton.getAlpha() > 0.3) {
+            pizzaButton.setAlpha((float) 0.2);
+          } else {
+            pizzaButton.setAlpha((float) 1);
+          }
+        }
+      });
+
+      condomButton.setOnClickListener(new OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+          if (condomButton.getAlpha() > 0.3) {
+            condomButton.setAlpha((float) 0.2);
+          } else {
+            condomButton.setAlpha((float) 1);
+          }
+        }
+      });
+
+      newspaperButton.setOnClickListener(new OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+          if (newspaperButton.getAlpha() > 0.3) {
+            newspaperButton.setAlpha((float) 0.2);
+          } else {
+            newspaperButton.setAlpha((float) 1);
+          }
+        }
+      });
+
+      chipsButton.setOnClickListener(new OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+          if (chipsButton.getAlpha() > 0.3) {
+            chipsButton.setAlpha((float) 0.2);
+          } else {
+            chipsButton.setAlpha((float) 1);
+          }
+        }
+      });
+    }
 
     addressText.addTextChangedListener(new TextWatcher() {
 
@@ -182,6 +210,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
       moveMap(location.getLatitude(), location.getLongitude());
       marker = map.addMarker(new MarkerOptions().draggable(true).position(
           new LatLng(location.getLatitude(), location.getLongitude())));
+
     } catch (final Exception e) {
       moveMap(GeoUtil.BERLIN, 10);
       marker = map.addMarker(new MarkerOptions().draggable(true).position(GeoUtil.BERLIN));
@@ -206,15 +235,25 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
 
       @Override
       public void onMarkerDrag(final Marker arg0) {
+        // No action
       }
     });
 
     addOpenings(null);
   }
 
-  public void addOpenings(View view) {
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  public void addOpenings(final View view) {
     final LinearLayout container = new LinearLayout(this);
     final List<TimePickerButton> list = new ArrayList<TimePickerButton>();
+    final ImageButton removeButton = new ImageButton(this);
+    removeButton.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+    removeButton.setImageResource(R.drawable.minus_button);
+    removeButton.setPadding(0, 0, 20, 0);
+    if (android.os.Build.VERSION.SDK_INT >= 11) {
+      removeButton.setScaleX(0.8f);
+      removeButton.setScaleY(0.8f);
+    }
 
     final RangeBox rangeBox = new RangeBox(this);
 
@@ -224,6 +263,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     final TextView textView = new TextView(this);
     textView.setText("bis");
 
+    container.addView(removeButton);
     container.addView(rangeBox);
     container.addView(timePickerButton);
     container.addView(textView);
@@ -233,6 +273,15 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     list.add(timePickerButton);
     list.add(timePickerButton2);
     openingMap.put(rangeBox, list);
+
+    removeButton.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(final View v) {
+        container.removeAllViews();
+        openingMap.remove(rangeBox);
+      }
+    });
   }
 
   public void moveMap(final LatLng latLng, final int zoom) {
@@ -279,17 +328,18 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
     }
   }
 
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public void submitSpaeti() {
     try {
-      JSONObject spaeti = new JSONObject();
+      final JSONObject spaeti = new JSONObject();
       spaeti.put("name", nameText.getText().toString());
-      JSONObject location = new JSONObject();
+      final JSONObject location = new JSONObject();
       location.put("lng", marker.getPosition().longitude);
       location.put("lat", marker.getPosition().latitude);
       location.put("street", addressText.getText().toString());
       spaeti.put("location", location);
 
-      JSONObject assortment = new JSONObject();
+      final JSONObject assortment = new JSONObject();
       if (android.os.Build.VERSION.SDK_INT >= 11) {
         assortment.put("pizza", pizzaButton.getAlpha() > 0.3 ? true : false);
         assortment.put("condoms", condomButton.getAlpha() > 0.3 ? true : false);
@@ -298,10 +348,10 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
       }
       spaeti.put("assortment", assortment);
 
-      Integer[] open = new Integer[] { null, null, null, null, null, null, null };
-      Integer[] closed = new Integer[] { null, null, null, null, null, null, null };
+      final Integer[] open = new Integer[] { null, null, null, null, null, null, null };
+      final Integer[] closed = new Integer[] { null, null, null, null, null, null, null };
 
-      for (RangeBox key : openingMap.keySet()) {
+      for (final RangeBox key : openingMap.keySet()) {
         final TimePickerButton startTimePicker = openingMap.get(key).get(0);
         final TimePickerButton endTimePicker = openingMap.get(key).get(1);
         final Integer startTime = startTimePicker.getHourOfDay() * 100
@@ -316,8 +366,8 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         }
       }
 
-      JSONArray openJson = new JSONArray();
-      JSONArray closedJson = new JSONArray();
+      final JSONArray openJson = new JSONArray();
+      final JSONArray closedJson = new JSONArray();
 
       for (int i = 0; i < open.length; i++) {
         if (open[i] == null) {
@@ -330,7 +380,7 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
         closedJson.put(i, closed[i]);
       }
 
-      JSONObject businessHours = new JSONObject();
+      final JSONObject businessHours = new JSONObject();
       businessHours.put("opened", openJson);
       businessHours.put("closed", closedJson);
 
@@ -339,26 +389,26 @@ public class AddSpaetiActivity extends SherlockFragmentActivity {
       ServerUtil.postJSON("http://spaeti.pavo.uberspace.de/dev/spaeti/", spaeti.toString(),
           new Handler(new Handler.Callback() {
             @Override
-            public boolean handleMessage(Message msg) {
+            public boolean handleMessage(final Message msg) {
               if (msg.getData().getInt("status") == 200) {
-                Toast toast = Toast.makeText(AddSpaetiActivity.this, "SpŠti erfolgreich erstellt",
-                    Toast.LENGTH_LONG);
+                final Toast toast = Toast.makeText(AddSpaetiActivity.this,
+                    "SpŠti erfolgreich erstellt", Toast.LENGTH_LONG);
                 toast.show();
               } else {
-                Toast toast = Toast.makeText(AddSpaetiActivity.this, "Fehler beim erstellen.",
-                    Toast.LENGTH_LONG);
+                final Toast toast = Toast.makeText(AddSpaetiActivity.this,
+                    "Fehler beim erstellen.", Toast.LENGTH_LONG);
                 toast.show();
               }
               return false;
             }
           }));
 
-      Intent intent = new Intent(this, MainActivity.class)
+      final Intent intent = new Intent(this, MainActivity.class)
           .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
       startActivity(intent);
 
-    } catch (JSONException e) {
+    } catch (final JSONException e) {
       e.printStackTrace();
     }
 

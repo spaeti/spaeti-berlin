@@ -30,5 +30,7 @@
     <string name="chips">Chips</string>
     <string name="condom">Kondome</string>
     <string name="newspaper">Zeitungen</string>
+    <string name="version">Version 0.4.0</string>
+    <string name="website">www.spaetiberlin.de</string>
 
 </resources>

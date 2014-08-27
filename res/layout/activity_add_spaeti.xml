@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabHost"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <fragment
-        android:id="@+id/addSpaetiMap"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        class="com.google.android.gms.maps.SupportMapFragment" />
+    <TabWidget
+        android:id="@android:id/tabs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
-    <ScrollView
+    <FrameLayout
+        android:id="@android:id/tabcontent"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/tab1"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingTop="60dp" >
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -48,6 +50,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
                 android:orientation="horizontal" >
 
                 <EditText
@@ -71,6 +74,21 @@
                     android:layout_weight="1"
                     android:src="@drawable/navigation_accept" />
             </LinearLayout>
+
+            <fragment
+                android:id="@+id/addSpaetiMap"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                class="com.google.android.gms.maps.SupportMapFragment" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tab2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60dp" >
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -98,38 +116,6 @@
                 android:layout_marginRight="5dp"
                 android:ems="10"
                 android:hint="@string/name" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="15dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="@string/openings"
-                    android:textAlignment="center"
-                    android:textSize="30sp" />
-
-                <Button
-                    android:id="@+id/newOpeningButton"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@drawable/plus_button"
-                    android:onClick="addOpenings" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/openingContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp" >
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -187,6 +173,46 @@
                     android:src="@drawable/chips" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/tab3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="60dp" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="@string/openings"
+                    android:textAlignment="center"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/newOpeningButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/plus_button"
+                    android:onClick="addOpenings" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/openingContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp" >
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</TabHost>

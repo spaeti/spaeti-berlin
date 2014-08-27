@@ -43,7 +43,7 @@
             android:label="@string/action_add" >
         </activity>
         <activity
-            android:name="de.spaetiberlin.app.SettingsActivity"
+            android:name="de.spaetiberlin.app.SettingsActivity_old"
             android:label="@string/action_settings" >
         </activity>
         <activity
@@ -67,6 +67,11 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBgZ1CglB36oc-RlS92cP5oY9mLe64CtTQ" />
+
+        <activity
+            android:name="de.spaetiberlin.app.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

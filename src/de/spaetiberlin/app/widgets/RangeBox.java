@@ -20,7 +20,7 @@ public class RangeBox extends Button {
 
   private final String[] abbr = new String[] { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
-  private final String[] selected = new String[] { "Mo", "Di", "Mi", "Do", "Fr", null, null };
+  private final String[] selected = new String[] { "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" };
 
   public RangeBox(final Context context) {
     super(context);
@@ -38,11 +38,11 @@ public class RangeBox extends Button {
   }
 
   private void init(final Context context) {
-    this.setText("Mo-Fr");
+    this.setText("Mo-So");
 
     final AlertDialog dialog = new AlertDialog.Builder(context)
         .setTitle("Test")
-        .setMultiChoiceItems(items, new boolean[] { true, true, true, true, true, false, false },
+        .setMultiChoiceItems(items, new boolean[] { true, true, true, true, true, true, true },
             new OnMultiChoiceClickListener() {
 
               @Override

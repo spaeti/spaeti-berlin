@@ -16,22 +16,25 @@ import de.spaetiberlin.app.models.Shop;
 
 public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
 
-  protected int width;
+  protected static int width = 0;
   protected SlidingMenu sidemenu;
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final Display display = getWindowManager().getDefaultDisplay();
-    // if android version is >=13, we can use display.getSize, otherwise,
-    // deprecated fallback
-    if (android.os.Build.VERSION.SDK_INT >= 13) {
-      final Point size = new Point();
-      display.getSize(size);
-      width = size.x;
-    } else {
-      width = display.getWidth();
+    // performance: only get size on first start
+    if (width == 0) {
+      final Display display = getWindowManager().getDefaultDisplay();
+      // if android version is >=13, we can use display.getSize, otherwise,
+      // deprecated fallback
+      if (android.os.Build.VERSION.SDK_INT >= 13) {
+        final Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+      } else {
+        width = display.getWidth();
+      }
     }
 
     sidemenu = new SlidingMenu(this);
@@ -65,7 +68,7 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
         goToAddSpaeti();
         return true;
       case R.id.action_favorites:
-        goToFavorites();
+        goToActivity(FavoriteActivity.class);
         return true;
       case R.id.action_map:
         goToMap(null, false);
@@ -110,10 +113,10 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
     goToAddSpaeti();
   }
 
-  public void goToFavorites() {
+  public <T> void goToActivity(final Class<T> activity) {
     sidemenu.showContent();
-    if (!this.getClass().getSimpleName().equals(FavoriteActivity.class.getSimpleName())) {
-      final Intent myIntent = new Intent(this, FavoriteActivity.class);
+    if (!this.getClass().getSimpleName().equals(activity.getSimpleName())) {
+      final Intent myIntent = new Intent(this, activity);
       myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
           .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
           .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -121,9 +124,16 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
     }
   }
 
-  // for starting in the menu
   public void goToFavorites(final View view) {
-    goToFavorites();
+    goToActivity(FavoriteActivity.class);
+  }
+
+  public void goToSettings(final View view) {
+    goToActivity(SettingsActivity.class);
+  }
+
+  public void goToAbout(final View view) {
+    goToActivity(AboutActivity.class);
   }
 
   @Override
@@ -133,30 +143,7 @@ public abstract class SpaetiAbstractActivity extends SherlockFragmentActivity {
         sidemenu.showMenu();
         return true;
     }
-
     return super.onKeyDown(keycode, e);
-  }
-
-  public void goToSettings(final View view) {
-    sidemenu.showContent();
-    if (!this.getClass().getSimpleName().equals(SettingsActivity.class.getSimpleName())) {
-      final Intent myIntent = new Intent(this, SettingsActivity.class);
-      myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-          .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-      startActivity(myIntent);
-    }
-  }
-
-  public void goToAbout(final View view) {
-    sidemenu.showContent();
-    if (!this.getClass().getSimpleName().equals(AboutActivity.class.getSimpleName())) {
-      final Intent myIntent = new Intent(this, AboutActivity.class);
-      myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-          .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-          .addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-      startActivity(myIntent);
-    }
   }
 
 }
